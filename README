@@ -1,0 +1,48 @@
+#Readme File
+
+First, you will need an installation of Python 3.8+, MLIP 2+, AFLOW 3.2.10+, and VASP 5+, and modules to accompany them.
+To install, pick a directory and put everything in here, in there. 
+You can put mliputils.py wherever you keep your custom python modules, or keep it in here. 
+Just keep track of where it goes in case it's not in here because the pathing is nifty like that.
+
+All the paths you will need:
+  pth = The location where you want to install PRAPs, usually the location of this README.
+  potpth = The location of your VASP POTCAR files.
+  MTPth = The location of the untrained MTP files (look in your MLIP installation dir).
+  modpth = The location of your slurm modules, especially MLIP
+  email = your email for receiving slurm notifications.
+  mlpth = The location to install mliputils.py. Unless you have a favorite location for Python libraries on your system, you can omit this one.
+
+My convention is to omit the final '/' character in paths:
+  right = /user/me
+  wrong = /user/me/
+Of course these are personal preferences, but all of the path variables have been coded with this in mind.
+
+You can either adjust all of the paths yourself or use adjust_paths.py as follows:
+  python install.py pth potpth MTPth modpth email mlpth
+
+Finally, make sure to adjust the slurm options in praps.slurm, active_learning.slurm, and accurate_potentials.slurm.
+
+
+To run PRAPs:
+When PRAPs runs, it will cd into a subdirectory named for your system of interest:
+    /home/you/PRAPs/ --> /home/you/PRAPs/cmpd
+Make sure that the various config files (.cfg files) are already present in there.
+Then set-up your inpraps.sh file in your submit directory. This will be imported frequently.
+    /home/you/PRAPs/inpraps.sh 
+To run PRAPs, make sure you've set your slurm options in praps.slurm and enter:
+    sbatch praps.slurm inpraps.sh
+NB: This assumes you use slurm. Adjust as needed.
+When PRAPs finishes, it will tar all the relevant files together in the cmpd directory, and might clean up a little.
+
+VERY IMPORTANT:
+Because MLIP can be compiled in serial or parallel, inspect your installation and your modules, and adjust the input scripts as needed.
+--Check your MLIP installation by running, "mlp help". On the second line it will either say "MTPR serial" or "MTPR mpi/parallel"
+--For serial MLIP:
+----You do not need to load any Intel/OneAPI/OpenMPI/etc.
+----You can run MLIP on cluster via the "srun" command.
+--For parallel MLIP:
+----You need to load Intel/OneAPI/OpenMPI/etc.
+----You can run MLIP on cluster via the "mpirun" command.
+
+A sample inpraps.sh has been provided in both the par/ and ser/ directories.
